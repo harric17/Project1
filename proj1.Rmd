@@ -3,6 +3,8 @@ Project 1
 
 This is my Project 1 for Reproducible Research.
 
+### Loading and preprocessing the data
+
 Below is how I loaded in the data.
 ```{r, echo=FALSE}
 setwd("C:/Users/harric17/Desktop/R Stuff/coursera/rep_rsrch/Project1")
@@ -14,47 +16,54 @@ dim(mydata)
 ```
 
 
-Here I found the sum of the steps per day
+First I found the sum of the steps per day after removing records with step value of NA
 ```{r, echo=TRUE}
 aggdata <- aggregate(x = mydata[c("steps")], FUN = sum,by = list(Group.date = mydata$date),na.rm=TRUE)
 ```
 
-Here's a histogram of total steps per day
+
+### What is mean total number of steps taken per day?
+
+Here's a histogram of those total steps per day
 
 ```{r fig.width=7, fig.height=6 }
 hist(aggdata$steps,main="Total Steps Per Day")
 ```
 
-Here's the mean and median of total steps per day
+Here's the mean and median of those total steps per day
 ```{r, echo=TRUE}
 mean(aggdata$steps)
 median(aggdata$steps)
 ```
 
-Here I found the average number of steps per 5 minute interval averaged accross all days
+### What is the average daily activity pattern?
+
+Next I found the average number of steps per 5 minute interval averaged accross all days after removing records with step value of NA
 
 ```{r, echo=TRUE}
 aggdata <- aggregate(x = mydata[c("steps")], FUN = mean,by = list(Group.interval = mydata$interval),na.rm=TRUE)
 ```
 
-heres a time series plot of average steps per interval
+Heres a time series plot of those average steps per interval
 
 ```{r, echo=TRUE}
 plot(aggdata$Group.interval,aggdata$steps,type="l")
 ```
 
-heres the 5 minute interval with the highest average steps
+Heres the 5 minute interval with the highest average steps
 
 ```{r, echo=TRUE}
 print(aggdata[aggdata$steps==max(aggdata$steps),c(1:2)],row.names=FALSE)
 ```
 
-heres the total number of records where steps are NA
+### Imputing missing values
+
+Heres the total number of records where steps are NA
 ```{r, echo=TRUE}
 sum(is.na(mydata$steps))
 ```
 
-lets impute missing values with the overall mean of steps
+Next I imputed missing values with the overall mean of steps
 
 ```{r, echo=TRUE}
 b = mean(mydata$steps,na.rm=T)
@@ -78,7 +87,9 @@ mean(aggdata$steps)
 median(aggdata$steps)
 ```
 
-lets create a weekend/weekday variable
+### Are there differences in activity patterns between weekdays and weekends?
+
+Next I created a weekend/weekday variable using non-imputed data
 ```{r, echo=TRUE}
 mydata = read.csv("activity.csv")
 mydata$day=weekdays(as.Date(mydata$date))
@@ -87,7 +98,7 @@ mydata$weekday[!(mydata$day %in% c("Saturday","Sunday"))] = "Weekday"
 table(mydata$weekday,mydata$day)
 ```
 
-heres a plot of interval vs total steps by weekday/weekend
+Heres a plot of interval vs total steps by weekday/weekend after removing NA values
 ```{r, echo=TRUE}
 aggdata <- aggregate(x = mydata[c("steps")], FUN = sum,by = list(Group.interval = mydata$interval, weekday=mydata$weekday),na.rm=TRUE)
 library(lattice)
