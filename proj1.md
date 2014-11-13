@@ -3,6 +3,8 @@ Project 1
 
 This is my Project 1 for Reproducible Research.
 
+### Loading and preprocessing the data
+
 Below is how I loaded in the data.
 
 
@@ -17,13 +19,16 @@ dim(mydata)
 ```
 
 
-Here I found the sum of the steps per day
+First I found the sum of the steps per day after removing records with step value of NA
 
 ```r
 aggdata <- aggregate(x = mydata[c("steps")], FUN = sum,by = list(Group.date = mydata$date),na.rm=TRUE)
 ```
 
-Here's a histogram of total steps per day
+
+### What is mean total number of steps taken per day?
+
+Here's a histogram of those total steps per day
 
 
 ```r
@@ -32,7 +37,7 @@ hist(aggdata$steps,main="Total Steps Per Day")
 
 ![plot of chunk unnamed-chunk-4](figure/unnamed-chunk-4.png) 
 
-Here's the mean and median of total steps per day
+Here's the mean and median of those total steps per day
 
 ```r
 mean(aggdata$steps)
@@ -50,14 +55,16 @@ median(aggdata$steps)
 ## [1] 10395
 ```
 
-Here I found the average number of steps per 5 minute interval averaged accross all days
+### What is the average daily activity pattern?
+
+Next I found the average number of steps per 5 minute interval averaged accross all days after removing records with step value of NA
 
 
 ```r
 aggdata <- aggregate(x = mydata[c("steps")], FUN = mean,by = list(Group.interval = mydata$interval),na.rm=TRUE)
 ```
 
-heres a time series plot of average steps per interval
+Heres a time series plot of those average steps per interval
 
 
 ```r
@@ -66,7 +73,7 @@ plot(aggdata$Group.interval,aggdata$steps,type="l")
 
 ![plot of chunk unnamed-chunk-7](figure/unnamed-chunk-7.png) 
 
-heres the 5 minute interval with the highest average steps
+Heres the 5 minute interval with the highest average steps
 
 
 ```r
@@ -78,7 +85,9 @@ print(aggdata[aggdata$steps==max(aggdata$steps),c(1:2)],row.names=FALSE)
 ##             835 206.2
 ```
 
-heres the total number of records where steps are NA
+### Imputing missing values
+
+Heres the total number of records where steps are NA
 
 ```r
 sum(is.na(mydata$steps))
@@ -88,7 +97,7 @@ sum(is.na(mydata$steps))
 ## [1] 2304
 ```
 
-lets impute missing values with the overall mean of steps
+Next I imputed missing values with the overall mean of steps
 
 
 ```r
@@ -129,7 +138,9 @@ median(aggdata$steps)
 ## [1] 10766
 ```
 
-lets create a weekend/weekday variable
+### Are there differences in activity patterns between weekdays and weekends?
+
+Next I created a weekend/weekday variable using non-imputed data
 
 ```r
 mydata = read.csv("activity.csv")
@@ -146,7 +157,7 @@ table(mydata$weekday,mydata$day)
 ##   Weekend      0      0     2304   2304        0       0         0
 ```
 
-heres a plot of interval vs total steps by weekday/weekend
+Heres a plot of interval vs total steps by weekday/weekend after removing NA values
 
 ```r
 aggdata <- aggregate(x = mydata[c("steps")], FUN = sum,by = list(Group.interval = mydata$interval, weekday=mydata$weekday),na.rm=TRUE)
