@@ -5,7 +5,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
 <meta http-equiv="x-ua-compatible" content="IE=9" >
 
-<title>Project 1</title>
+<title>Reproducible Research Project 1 - Activity Data Set</title>
 
 <style type="text/css">
 body, td {
@@ -179,7 +179,7 @@ hljs.initHighlightingOnLoad();
 </head>
 
 <body>
-<h1>Project 1</h1>
+<h1>Reproducible Research Project 1 - Activity Data Set</h1>
 
 <p>This is my Project 1 for Reproducible Research.</p>
 
@@ -194,12 +194,12 @@ dim(mydata)
 <pre><code>## [1] 17568     3
 </code></pre>
 
+<h3>What is mean total number of steps taken per day?</h3>
+
 <p>First I found the sum of the steps per day after removing records with step value of NA</p>
 
 <pre><code class="r">aggdata &lt;- aggregate(x = mydata[c(&quot;steps&quot;)], FUN = sum,by = list(Group.date = mydata$date),na.rm=TRUE)
 </code></pre>
-
-<h3>What is mean total number of steps taken per day?</h3>
 
 <p>Here&#39;s a histogram of those total steps per day</p>
 

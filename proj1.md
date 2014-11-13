@@ -1,4 +1,4 @@
-Project 1
+Reproducible Research Project 1 - Activity Data Set
 ========================================================
 
 This is my Project 1 for Reproducible Research.
@@ -19,14 +19,13 @@ dim(mydata)
 ```
 
 
+### What is mean total number of steps taken per day?
+
 First I found the sum of the steps per day after removing records with step value of NA
 
 ```r
 aggdata <- aggregate(x = mydata[c("steps")], FUN = sum,by = list(Group.date = mydata$date),na.rm=TRUE)
 ```
-
-
-### What is mean total number of steps taken per day?
 
 Here's a histogram of those total steps per day
 
