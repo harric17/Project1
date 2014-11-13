@@ -1,0 +1,100 @@
+Project 1
+========================================================
+
+This is my Project 1 for Reproducible Research.
+
+Below is how I loaded in the data.
+```{r, echo=FALSE}
+setwd("C:/Users/harric17/Desktop/R Stuff/coursera/rep_rsrch/Project1")
+```
+
+```{r, echo=TRUE}
+mydata = read.csv("activity.csv")
+dim(mydata)
+```
+
+
+Here I found the sum of the steps per day
+```{r, echo=TRUE}
+aggdata <- aggregate(x = mydata[c("steps")], FUN = sum,by = list(Group.date = mydata$date),na.rm=TRUE)
+```
+
+Here's a histogram of total steps per day
+
+```{r fig.width=7, fig.height=6 }
+hist(aggdata$steps,main="Total Steps Per Day")
+```
+
+Here's the mean and median of total steps per day
+```{r, echo=TRUE}
+mean(aggdata$steps)
+median(aggdata$steps)
+```
+
+Here I found the average number of steps per 5 minute interval averaged accross all days
+
+```{r, echo=TRUE}
+aggdata <- aggregate(x = mydata[c("steps")], FUN = mean,by = list(Group.interval = mydata$interval),na.rm=TRUE)
+```
+
+heres a time series plot of average steps per interval
+
+```{r, echo=TRUE}
+plot(aggdata$Group.interval,aggdata$steps,type="l")
+```
+
+heres the 5 minute interval with the highest average steps
+
+```{r, echo=TRUE}
+print(aggdata[aggdata$steps==max(aggdata$steps),c(1:2)],row.names=FALSE)
+```
+
+heres the total number of records where steps are NA
+```{r, echo=TRUE}
+sum(is.na(mydata$steps))
+```
+
+lets impute missing values with the overall mean of steps
+
+```{r, echo=TRUE}
+b = mean(mydata$steps,na.rm=T)
+mydata[,"steps"][is.na(mydata$steps)]=b
+```
+
+Here I found the sum of the steps per day using the imputed data
+```{r, echo=TRUE}
+aggdata <- aggregate(x = mydata[c("steps")], FUN = sum,by = list(Group.date = mydata$date),na.rm=TRUE)
+```
+
+Here's a histogram of total steps per day using the imputed data
+```{r fig.width=7, fig.height=6 }
+hist(aggdata$steps,main="Total Steps Per Day")
+```
+
+Here's the mean and median of total steps per day using the imputed data. looks like this has a normalizing effect on the distribution.  
+it increases the mean and median.
+```{r, echo=TRUE}
+mean(aggdata$steps)
+median(aggdata$steps)
+```
+
+lets create a weekend/weekday variable
+```{r, echo=TRUE}
+mydata = read.csv("activity.csv")
+mydata$day=weekdays(as.Date(mydata$date))
+mydata$weekday[mydata$day %in% c("Saturday","Sunday")] = "Weekend"
+mydata$weekday[!(mydata$day %in% c("Saturday","Sunday"))] = "Weekday"
+table(mydata$weekday,mydata$day)
+```
+
+heres a plot of interval vs total steps by weekday/weekend
+```{r, echo=TRUE}
+aggdata <- aggregate(x = mydata[c("steps")], FUN = sum,by = list(Group.interval = mydata$interval, weekday=mydata$weekday),na.rm=TRUE)
+library(lattice)
+xyplot(steps~Group.interval|weekday, data=aggdata, type="l")
+
+```
+
+
+
+
